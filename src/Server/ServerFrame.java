@@ -1,113 +1,139 @@
 package Server;
 
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.ScrollPane;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import lombok.Data;
+
+@Data
 public class ServerFrame extends JFrame {
-	 private JTextField inputPort;
-	 
-	    public JButton startButton;
-	    public JButton stopButton;
-	    
-	    private JLabel background;
-	    private JTextArea mainBoard;
-	    private Font f;
+	private Server mContext;
 
-	    private Server server;
+	private ScrollPane scrollPane;
 
-	    public ServerFrame(Server server) {
-	        this.server = server;
-	        initData();
-	        setInitLayout();
-	    }
+	// 백그라운드 패널
+	private BackgroundPanel backgroundPanel;
 
-	    private void initData() {
-	        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-	        setSize(400, 775);
-	        setTitle("Chat Server");
-	        
-	        background = new JLabel(new ImageIcon("img/say.png"));
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setContentPane(background);
-			setSize(400, 775);
-	        
-	        // 메인패널
-	        mainBoard = new JTextArea();
-	        mainBoard.setEditable(false);
+	// 메인보드
+	private JPanel mainPanel;
+	private JTextArea mainBoard;
 
-	        // 포트입력
-	        inputPort = new JTextField(10);
-	        inputPort.setText("7000");
-	        startButton = new JButton("Start");
-	        stopButton = new JButton("Stop");
-	        JLabel portLabel = new JLabel("Port: ");
-	        f = new Font("Serif", Font.BOLD, 18);
+	// 포트패널
+	private JPanel portPanel;
+	private JLabel portLabel;
+	private JTextField inputPort;
+	private JButton connectBtn;
+	private JButton dismissBtn;
 
-	        // 레이아웃 설정
-	        background.setBackground(getForeground());
-	        
-	        JPanel panel = new JPanel();
-	        panel.setBorder(new TitledBorder(new LineBorder(Color.GREEN, 5), "Server"));
-	        panel.setBounds(40, 250, 305, 300);
-	        panel.setBackground(Color.WHITE);
-
-	        JScrollPane scrollPane = new JScrollPane(mainBoard);
-	        scrollPane.setBounds(10, 20, 280, 260);
-	        panel.setLayout(null);
-	        panel.add(scrollPane);
-
-	        // 서버 시작 버튼에 액션 리스너 추가
-	        startButton.addActionListener(new ActionListener() {
-	            @Override
-	            public void actionPerformed(ActionEvent e) {
-	                startServer(); // 서버 시작 메서드 호출
-	            }
-	        });
-
-	        // 배치
-	        setLayout(null);
-	        add(portLabel);
-	        portLabel.setBounds(60, 580, 120, 30);
-	        portLabel.setFont(f);
-	        add(inputPort);
-	        inputPort.setBounds(140, 580, 190, 30);
-	        add(startButton);
-	        startButton.setBounds(60, 640, 100, 50);
-	        add(stopButton);
-	        stopButton.setBounds(230, 640, 100, 50);
-	        add(panel);
-	    }
-
-	    private void startServer() {
-	        server.startServer(); // 서버 시작 메서드 호출
-	    }
-
-	    public String getInputPort() {
-	        return inputPort.getText();
-	    }
-
-	    public void appendLog(String message) {
-	        mainBoard.append(message + "\n");
-	    }
-
-	    private void setInitLayout() {
-	        setResizable(false);
-	        setLocationRelativeTo(null);
-	    }
+	public ServerFrame(Server mContext) {
+		this.mContext = mContext;
+		initObject();
+		initSetting();
+		initListener();
 	}
 
+	private void initObject() {
+		// 백그라운드 패널
+		backgroundPanel = new BackgroundPanel();
 
+		// 메인 패널
+		mainPanel = new JPanel();
+		mainBoard = new JTextArea();
+
+		scrollPane = new ScrollPane();
+
+		// 포트패널
+		portPanel = new JPanel();
+		portLabel = new JLabel("PORT NUMBER");
+		inputPort = new JTextField(10);
+		connectBtn = new JButton("연결");
+		dismissBtn = new JButton("해제");
+
+		// 테스트 코드
+//		inputPort.setText("10000");
+	}
+
+	private void initSetting() {
+		setTitle("[ 세이클럽 ] - 서버관리자");
+		setSize(400, 775);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLayout(null);
+
+		// 백그라운드 패널
+		backgroundPanel.setSize(getWidth(), getHeight());
+		backgroundPanel.setLayout(null);
+		add(backgroundPanel);
+
+		// 포트패널 컴포넌트
+		portPanel.setBounds(60, 580, 250, 70);
+		portPanel.setBackground(new Color(0, 0, 0, 0));
+		portPanel.add(portLabel);
+		portPanel.add(inputPort);
+		portPanel.add(connectBtn);
+		portPanel.add(dismissBtn);
+		backgroundPanel.add(portPanel);
+
+		// 메인패널 컴포넌트
+		mainPanel.setBorder(new TitledBorder(new LineBorder(Color.GREEN, 5), "Server"));
+		mainPanel.setBounds(40, 250, 305, 300);
+		mainPanel.setBackground(Color.WHITE);
+
+		mainBoard.setEnabled(false);
+		mainPanel.add(scrollPane);
+		scrollPane.setBounds(10, 20, 280, 260);
+		scrollPane.add(mainBoard);
+		backgroundPanel.add(mainPanel);
+
+		setVisible(true);
+	}
+
+	private void initListener() {
+		connectBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mContext.startServer();
+			}
+		});
+		dismissBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (dismissBtn.isEnabled() == true) {
+					mContext.stopServer();
+				}
+			}
+		});
+	}
+
+	private class BackgroundPanel extends JPanel {
+		private JPanel backgroundPanel;
+		private Image backgroundImage;
+
+		public BackgroundPanel() {
+			backgroundImage = new ImageIcon("img/say.png").getImage();
+			backgroundPanel = new JPanel();
+			add(backgroundPanel);
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+		}
+	}
+
+}
