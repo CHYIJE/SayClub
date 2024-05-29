@@ -13,6 +13,8 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
+import Client.Client;
+
 public class Server {
 
 	// 접속된 유저 벡터
@@ -35,6 +37,8 @@ public class Server {
 	private String protocol;
 	private String from;
 	private String message;
+
+	private Client mContext;
 
 	public Server() {
 		serverFrame = new ServerFrame(this);
@@ -117,7 +121,7 @@ public class Server {
 			user.writer(msg);
 		}
 	}
-	
+
 	private void serverViewAppendWriter(String str) {
 		mainBoard.append(str + "\n");
 	}
@@ -157,7 +161,7 @@ public class Server {
 				sendInfomation();
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(null, "서버 입출력 장치 에러!", "알림", JOptionPane.ERROR_MESSAGE);
-					serverViewAppendWriter("[에러] 서버 입출력 장치 에러 ! !\n");
+				serverViewAppendWriter("[에러] 서버 입출력 장치 에러 ! !\n");
 			}
 		}
 
@@ -181,10 +185,9 @@ public class Server {
 
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(null, "접속 에러 !", "알림", JOptionPane.ERROR_MESSAGE);
-					serverViewAppendWriter("[에러] 접속 에러 ! !\n");
-				}
+				serverViewAppendWriter("[에러] 접속 에러 ! !\n");
+			}
 		}
-
 
 		/**
 		 * 클라이언트 연결을 닫는다.
@@ -254,7 +257,7 @@ public class Server {
 				enterRoom();
 			}
 		}
-		
+
 		/**
 		 * 클라이언트측으로 보내는 응답<br>
 		 * 
@@ -268,6 +271,7 @@ public class Server {
 				JOptionPane.showMessageDialog(null, "서버 출력 에러 !", "알림", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+
 		/**
 		 * 프로토콜 인터페이스 <br>
 		 */
@@ -293,8 +297,33 @@ public class Server {
 			}
 		}
 
+		public void newUser() {
+			// 자기자신을 벡터에 추가
+			connectedUsers.add(this);
+			broadCast("NewUser/" + id);
+		}
+
+		public void connectedUser() {
+			for (int i = 0; i < connectedUsers.size(); i++) {
+				ConnectedUser user = connectedUsers.elementAt(i);
+				writer("ConnectedUser/" + user.id);
+			}
+		}
+
+		public void madeRoom() {
+			for (int i = 0; i < madeRooms.size(); i++) {
+				MyRoom myRoom = madeRooms.elementAt(i);
+				writer("MadeRoom/" + myRoom.roomName);
+			}
+		}
+
+		public void newRoom() {
+			broadCast("NewRoom/" + from);
+		}
 
 		public void makeRoom() {
+
+			// 방이 이미 존재하는지 확인
 			for (int i = 0; i < madeRooms.size(); i++) {
 				MyRoom room = madeRooms.elementAt(i);
 
@@ -307,7 +336,8 @@ public class Server {
 				}
 			}
 
-			if (roomCheck) {
+			// 방이 존재하지 않으면 새로운 방을 생성
+			if (roomCheck == false) {
 				myRoomName = from;
 				MyRoom myRoom = new MyRoom(from, this);
 				madeRooms.add(myRoom);
@@ -318,10 +348,6 @@ public class Server {
 			}
 		}
 
-		public void newRoom() {
-			broadCast("NewRoom/" + from);
-		}
-		
 		public void outRoom() {
 			for (int i = 0; i < madeRooms.size(); i++) {
 				MyRoom myRoom = madeRooms.elementAt(i);
@@ -347,26 +373,6 @@ public class Server {
 					serverViewAppendWriter("[입장]" + from + " 방_" + id + "\n");
 					writer("EnterRoom/" + from);
 				}
-			}
-		}
-
-		public void newUser() {
-			// 자기자신을 벡터에 추가
-			connectedUsers.add(this);
-			broadCast("NewUser/" + id);
-		}
-
-		public void connectedUser() {
-			for (int i = 0; i < connectedUsers.size(); i++) {
-				ConnectedUser user = connectedUsers.elementAt(i);
-				writer("ConnectedUser/" + user.id);
-			}
-		}
-
-		public void madeRoom() {
-			for (int i = 0; i < madeRooms.size(); i++) {
-				MyRoom myRoom = madeRooms.elementAt(i);
-				writer("MadeRoom/" + myRoom.roomName);
 			}
 		}
 
@@ -417,8 +423,6 @@ public class Server {
 			}
 		}
 	}
-
-	
 
 	public static void main(String[] args) {
 		new Server();

@@ -25,7 +25,9 @@ import lombok.Data;
 
 @Data
 public class IndexPanel extends JPanel {
-
+	
+	private Client mContext;
+	
 	// 백그라운드 이미지 컴포넌트
 	private Image backgroundImage;
 	private JPanel backgroundPanel;
@@ -99,8 +101,8 @@ public class IndexPanel extends JPanel {
 		// 보더 컴포넌트
 		borderPanel.setBounds(100, 250, 190, 380);
 		borderPanel.setLayout(null);
-		borderPanel.setBackground(Color.WHITE);
-		borderPanel.setBorder(new TitledBorder(new LineBorder(Color.GREEN, 5), "Login"));
+		borderPanel.setBackground(new Color(249,248,240));
+		borderPanel.setBorder(new TitledBorder(new LineBorder(new Color(174,193,132), 5), "Login"));
 		add(borderPanel);
 
 		// IP 컴포넌트
@@ -138,7 +140,10 @@ public class IndexPanel extends JPanel {
 		connectBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				clickConnectBtn();
+				// 중복 접속 안되게 
+				if (connectBtn.isEnabled() == true) {
+					clickConnectBtn();
+				}
 			}
 		});
 

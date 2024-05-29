@@ -16,6 +16,8 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
+import Server.Server;
+
 public class Client implements CallBackClientService {
 	// 프레임 창
 	private ClientFrame clientFrame;
@@ -55,7 +57,7 @@ public class Client implements CallBackClientService {
 	private Vector<String> roomNameList = new Vector<>();
 
 	// JOptionPane 사용할때 알림창의 아이콘 변경할 ImageIcon
-	private ImageIcon icon = new ImageIcon("images/erroricon.png");
+	private ImageIcon icon = new ImageIcon("img/erroricon.png");
 
 	public Client() {
 		clientFrame = new ClientFrame(this);
@@ -252,6 +254,9 @@ public class Client implements CallBackClientService {
 		makeRoomBtn.setEnabled(false);
 		enterRoomBtn.setEnabled(false);
 		outRoomBtn.setEnabled(true);
+		// 남철이의 보은
+//		roomNameList.add(myRoomName);
+//		roomList.setListData(roomNameList);
 	}
 
 	public void madeRoom() {
@@ -264,9 +269,11 @@ public class Client implements CallBackClientService {
 	public void newRoom() {
 		roomNameList.add(from);
 		roomList.setListData(roomNameList);
+//		roomNameList.add(myRoomName);
 	}
 
 	public void outRoom() {
+
 		myRoomName = null;
 		mainMessageBox.setText("");
 		makeRoomBtn.setEnabled(true);
@@ -297,28 +304,25 @@ public class Client implements CallBackClientService {
 	 * 클라이언트 화면단에서 정보를 받아오는 콜백 인터페이스<br>
 	 * 
 	 */
-	@Override
 	public void clickSendMessageBtn(String messageText) {
 		writer("Chatting/" + myRoomName + "/" + messageText);
 	}
 
-	@Override
 	public void clickSendSecretMessageBtn(String msg) {
 		String user = (String) clientFrame.getWaitingRoomPanel().getUserList().getSelectedValue();
 		writer("SecretMessage/" + user + "/" + msg);
 	}
 
-	@Override
 	public void clickMakeRoomBtn(String roomName) {
+
+		System.out.println("만들어져라 얍");
 		writer("MakeRoom/" + roomName);
 	}
 
-	@Override
 	public void clickOutRoomBtn(String roomName) {
 		writer("OutRoom/" + roomName);
 	}
 
-	@Override
 	public void clickEnterRoomBtn(String roomName) {
 		writer("EnterRoom/" + roomName);
 	}

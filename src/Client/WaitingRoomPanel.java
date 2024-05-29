@@ -75,21 +75,21 @@ public class WaitingRoomPanel extends JPanel implements ActionListener {
 		setSize(getWidth(), getHeight());
 		setLayout(null);
 
-		userListPanel.setBounds(50, 30, 120, 260);
+		userListPanel.setBounds(50, 250, 120, 260);
 		userListPanel.setBackground(Color.WHITE);
-		userListPanel.setBorder(new TitledBorder(new LineBorder(Color.GREEN, 3), "user List"));
+		userListPanel.setBorder(new TitledBorder(new LineBorder(new Color(174,193,132), 3), "user List"));
 
 		userListPanel.add(userList);
 		add(userListPanel);
 
-		roomListPanel.setBounds(230, 30, 120, 260);
+		roomListPanel.setBounds(230, 250, 120, 260);
 		roomListPanel.setBackground(Color.WHITE);
-		roomListPanel.setBorder(new TitledBorder(new LineBorder(Color.GREEN, 3), "room List"));
+		roomListPanel.setBorder(new TitledBorder(new LineBorder(new Color(174,193,132), 3), "room List"));
 		roomListPanel.add(roomList);
 		add(roomListPanel);
 
-		roomBtnPanel.setBounds(50, 310, 300, 30);
-		roomBtnPanel.setBackground(Color.WHITE);
+		roomBtnPanel.setBounds(50, 530, 300, 30);
+		roomBtnPanel.setBackground(new Color(249,248,240));
 		roomBtnPanel.setLayout(null);
 
 		makeRoomBtn.setBackground(Color.WHITE);
@@ -114,8 +114,8 @@ public class WaitingRoomPanel extends JPanel implements ActionListener {
 		secretMsgBtn.setBackground(Color.WHITE);
 		secretMsgBtn.setEnabled(false);
 
-		sendMessagePanel.setBounds(50, 360, 300, 60);
-		sendMessagePanel.setBackground(Color.WHITE);
+		sendMessagePanel.setBounds(50, 580, 300, 60);
+		sendMessagePanel.setBackground(new Color(249,248,240));
 //		sendMessagePanel.setBorder(new TitledBorder(new LineBorder(Color.BLACK, 2), "secret Message"));
 		sendMessagePanel.setLayout(null);
 		sendMessagePanel.add(inputSecretMsg);
@@ -143,7 +143,7 @@ public class WaitingRoomPanel extends JPanel implements ActionListener {
 			}
 
 		} else if (e.getSource() == makeRoomBtn) {
-
+			System.out.println("드루와");
 			String roomName = JOptionPane.showInputDialog("[ 방 이름 설정 ]");
 
 			if (!roomName.equals(null)) {

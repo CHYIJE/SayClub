@@ -81,7 +81,7 @@ public class ServerFrame extends JFrame {
 
 		// 포트패널 컴포넌트
 		portPanel.setBounds(60, 580, 250, 70);
-		portPanel.setBackground(new Color(0, 0, 0, 0));
+		portPanel.setBackground(new Color(249, 248, 240));
 		portPanel.add(portLabel);
 		portPanel.add(inputPort);
 		portPanel.add(connectBtn);
@@ -89,9 +89,9 @@ public class ServerFrame extends JFrame {
 		backgroundPanel.add(portPanel);
 
 		// 메인패널 컴포넌트
-		mainPanel.setBorder(new TitledBorder(new LineBorder(Color.GREEN, 5), "Server"));
+		mainPanel.setBorder(new TitledBorder(new LineBorder(new Color(174, 193, 132), 5), "Server"));
 		mainPanel.setBounds(40, 250, 305, 300);
-		mainPanel.setBackground(Color.WHITE);
+		mainPanel.setBackground(new Color(249, 248, 240));
 
 		mainBoard.setEnabled(false);
 		mainPanel.add(scrollPane);
