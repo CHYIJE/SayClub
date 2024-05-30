@@ -14,6 +14,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 import Client.Client;
+import Client.IndexPanel;
+import Client.MessagePanel;
+import Client.WaitingRoomPanel;
+import lombok.Data;
 
 public class Server {
 
@@ -120,6 +124,11 @@ public class Server {
 			ConnectedUser user = connectedUsers.elementAt(i);
 			user.writer(msg);
 		}
+	}
+
+	// 전체공지
+	public void allMessage(String msg) {
+		broadCast("Server/" + msg);
 	}
 
 	private void serverViewAppendWriter(String str) {
@@ -230,8 +239,7 @@ public class Server {
 
 		/**
 		 * 프로토콜을 구별해서 해당 메소드 호출 <br>
-		 * 
-		 * @param str
+		 * 파싱
 		 */
 		private void checkProtocol(String str) {
 			StringTokenizer tokenizer = new StringTokenizer(str, "/");
@@ -322,7 +330,7 @@ public class Server {
 		}
 
 		public void makeRoom() {
-
+			roomCheck = true;
 			// 방이 이미 존재하는지 확인
 			for (int i = 0; i < madeRooms.size(); i++) {
 				MyRoom room = madeRooms.elementAt(i);
@@ -337,7 +345,7 @@ public class Server {
 			}
 
 			// 방이 존재하지 않으면 새로운 방을 생성
-			if (roomCheck == false) {
+			if (roomCheck) {
 				myRoomName = from;
 				MyRoom myRoom = new MyRoom(from, this);
 				madeRooms.add(myRoom);

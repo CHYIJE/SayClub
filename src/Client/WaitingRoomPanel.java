@@ -43,6 +43,11 @@ public class WaitingRoomPanel extends JPanel implements ActionListener {
 	private Vector<String> userIdVector = new Vector<>();
 	private Vector<String> roomNameVector = new Vector<>();
 
+	// 서버 알림
+	private JPanel adminPanel;
+	private JTextField adminMsg;
+	private JButton adminBt;
+
 	private CallBackClientService callBackService;
 
 	public WaitingRoomPanel(CallBackClientService callBackService) {
@@ -65,31 +70,35 @@ public class WaitingRoomPanel extends JPanel implements ActionListener {
 		roomList = new JList<>();
 
 		inputSecretMsg = new JTextField();
-		secretMsgBtn = new JButton("send Message");
-		makeRoomBtn = new JButton("makeRoom");
-		outRoomBtn = new JButton("outRoom");
-		enterRoomBtn = new JButton("enterRoom");
+		secretMsgBtn = new JButton("귓속말 보내기");
+		makeRoomBtn = new JButton("MakeRoom");
+		outRoomBtn = new JButton("방 나가기");
+		enterRoomBtn = new JButton("방 들어가기");
+
+		// 어드민 공지 메시지
+		adminPanel = new JPanel();
+		adminMsg = new JTextField(20);
 	}
 
 	private void initSetting() {
 		setSize(getWidth(), getHeight());
 		setLayout(null);
 
-		userListPanel.setBounds(50, 250, 120, 260);
+		userListPanel.setBounds(50, 300, 120, 260);
 		userListPanel.setBackground(Color.WHITE);
-		userListPanel.setBorder(new TitledBorder(new LineBorder(new Color(174,193,132), 3), "user List"));
+		userListPanel.setBorder(new TitledBorder(new LineBorder(new Color(174, 193, 132), 3), "유저 목록"));
 
 		userListPanel.add(userList);
 		add(userListPanel);
 
-		roomListPanel.setBounds(230, 250, 120, 260);
+		roomListPanel.setBounds(230, 300, 120, 260);
 		roomListPanel.setBackground(Color.WHITE);
-		roomListPanel.setBorder(new TitledBorder(new LineBorder(new Color(174,193,132), 3), "room List"));
+		roomListPanel.setBorder(new TitledBorder(new LineBorder(new Color(174, 193, 132), 3), "방 목록"));
 		roomListPanel.add(roomList);
 		add(roomListPanel);
 
-		roomBtnPanel.setBounds(50, 530, 300, 30);
-		roomBtnPanel.setBackground(new Color(249,248,240));
+		roomBtnPanel.setBounds(50, 580, 300, 30);
+		roomBtnPanel.setBackground(new Color(249, 248, 240));
 		roomBtnPanel.setLayout(null);
 
 		makeRoomBtn.setBackground(Color.WHITE);
@@ -97,7 +106,7 @@ public class WaitingRoomPanel extends JPanel implements ActionListener {
 		makeRoomBtn.setEnabled(false);
 
 		outRoomBtn.setBackground(Color.WHITE);
-		outRoomBtn.setBounds(108, 5, 85, 25);
+		outRoomBtn.setBounds(105, 5, 90, 25);
 		outRoomBtn.setEnabled(false);
 
 		enterRoomBtn.setBackground(Color.WHITE);
@@ -114,13 +123,22 @@ public class WaitingRoomPanel extends JPanel implements ActionListener {
 		secretMsgBtn.setBackground(Color.WHITE);
 		secretMsgBtn.setEnabled(false);
 
-		sendMessagePanel.setBounds(50, 580, 300, 60);
-		sendMessagePanel.setBackground(new Color(249,248,240));
+		sendMessagePanel.setBounds(50, 620, 300, 60);
+		sendMessagePanel.setBackground(new Color(249, 248, 240));
 //		sendMessagePanel.setBorder(new TitledBorder(new LineBorder(Color.BLACK, 2), "secret Message"));
 		sendMessagePanel.setLayout(null);
 		sendMessagePanel.add(inputSecretMsg);
 		sendMessagePanel.add(secretMsgBtn);
 		add(sendMessagePanel);
+
+		// 서버 메세지 컴포넌트
+		adminPanel.add(adminMsg);
+		adminPanel.setBorder(new TitledBorder(new LineBorder(new Color(174, 193, 132), 5), "전체공지"));
+		adminPanel.setBounds(40, 225, 305, 63);
+		adminPanel.setBackground(new Color(249, 248, 240));
+		adminMsg.setEnabled(false);
+		adminMsg.setDisabledTextColor(Color.BLUE);
+		add(adminPanel);
 	}
 
 	private void initListener() {

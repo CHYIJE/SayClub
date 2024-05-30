@@ -41,6 +41,11 @@ public class MessagePanel extends JPanel {
 	// 메세지 보내기 버튼
 	private JButton sendMessageBtn;
 
+	// 서버 알림
+	private JPanel adminPanel;
+	private JTextField adminMsg;
+	private JButton adminBt;
+
 	private CallBackClientService callBackService;
 
 	public MessagePanel(CallBackClientService callBackService) {
@@ -62,6 +67,10 @@ public class MessagePanel extends JPanel {
 		mainMessageBox = new JTextArea();
 		writeMessageBox = new JTextField(17);
 		sendMessageBtn = new JButton("전송");
+
+		// 어드민 공지 메시지
+		adminPanel = new JPanel();
+		adminMsg = new JTextField(20);
 	}
 
 	private void initSetting() {
@@ -70,26 +79,38 @@ public class MessagePanel extends JPanel {
 
 		backgroundPanel.setSize(getWidth(), getHeight());
 		backgroundPanel.setLayout(null);
-		add(bottomPanel);
+//		add(backgroundPanel); // bottomPanel 대신 backgroundPanel을 추가
+
+//		add(bottomPanel);
 
 		mainMessageBox.setEnabled(false);
-		mainPanel.setBounds(40, 240, 300, 350);
-		mainPanel.setBorder(new TitledBorder(new LineBorder(new Color(174,193,132),5), "Message"));
-		mainPanel.setBackground(new Color(249,248,240));
-		mainPanel.add(scrollPane);
+		mainMessageBox.setDisabledTextColor(Color.BLACK); // 비활성화 상태에서 텍스트 색상 설정
+		mainPanel.setBounds(40, 300, 300, 350);
+		mainPanel.setBorder(new TitledBorder(new LineBorder(new Color(174, 193, 132), 5), "Message"));
+		mainPanel.setBackground(new Color(249, 248, 240));
 		scrollPane.setBounds(45, 15, 280, 310);
 		scrollPane.add(mainMessageBox);
+		mainPanel.add(scrollPane);
 		add(mainPanel);
 
 		sendMessageBtn.setBackground(Color.WHITE);
 		sendMessageBtn.setPreferredSize(new Dimension(60, 20));
 		sendMessageBtn.setEnabled(false);
-		bottomPanel.setBounds(43, 600, 294, 35);
-		bottomPanel.setBackground(new Color(249,248,240));
-		bottomPanel.setBorder(new LineBorder(new Color(174,193,132), 2));
+		bottomPanel.setBounds(43, 655, 294, 35);
+		bottomPanel.setBackground(new Color(249, 248, 240));
+		bottomPanel.setBorder(new LineBorder(new Color(174, 193, 132), 2));
 		bottomPanel.add(writeMessageBox);
 		bottomPanel.add(sendMessageBtn);
 		add(bottomPanel);
+
+		// 서버 메세지 컴포넌트
+		adminPanel.add(adminMsg);
+		adminPanel.setBorder(new TitledBorder(new LineBorder(new Color(174, 193, 132), 5), "전체공지"));
+		adminPanel.setBounds(40, 225, 305, 63);
+		adminPanel.setBackground(new Color(249, 248, 240));
+		adminMsg.setEnabled(false);
+		adminMsg.setDisabledTextColor(Color.BLUE);
+		add(adminPanel);
 	}
 
 	private void initListener() {

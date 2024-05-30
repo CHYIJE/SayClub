@@ -226,6 +226,10 @@ public class Client implements CallBackClientService {
 		} else if (protocol.equals("UserOut")) {
 			userIdList.remove(from);
 			userList.setListData(userIdList);
+		} else if (protocol.equals("Server")) {
+			clientFrame.getWaitingRoomPanel().getAdminMsg().setText(from);
+			clientFrame.getIndexPanel().getAdminMsg().setText(from);
+			clientFrame.getMessagePanel().getAdminMsg().setText(from);
 		}
 	}
 
@@ -315,8 +319,8 @@ public class Client implements CallBackClientService {
 
 	public void clickMakeRoomBtn(String roomName) {
 
-		System.out.println("만들어져라 얍");
 		writer("MakeRoom/" + roomName);
+		System.out.println("만들어져라 얍");
 	}
 
 	public void clickOutRoomBtn(String roomName) {

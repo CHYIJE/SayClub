@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -25,9 +26,9 @@ import lombok.Data;
 
 @Data
 public class IndexPanel extends JPanel {
-	
+
 	private Client mContext;
-	
+
 	// 백그라운드 이미지 컴포넌트
 	private Image backgroundImage;
 	private JPanel backgroundPanel;
@@ -52,6 +53,11 @@ public class IndexPanel extends JPanel {
 
 	// 로그인 버튼
 	private JButton connectBtn;
+
+	// 서버 알림
+	private JPanel adminPanel;
+	private JTextField adminMsg;
+	private JButton adminBt;
 
 	private CallBackClientService callBackService;
 
@@ -87,6 +93,10 @@ public class IndexPanel extends JPanel {
 
 		// 로그인 버튼
 		connectBtn = new JButton("Connect");
+
+		// 어드민 공지 메시지
+		adminPanel = new JPanel();
+		adminMsg = new JTextField(20);
 	}
 
 	private void initSetting() {
@@ -99,10 +109,10 @@ public class IndexPanel extends JPanel {
 		add(backgroundPanel);
 
 		// 보더 컴포넌트
-		borderPanel.setBounds(100, 250, 190, 380);
+		borderPanel.setBounds(100, 300, 190, 380);
 		borderPanel.setLayout(null);
-		borderPanel.setBackground(new Color(249,248,240));
-		borderPanel.setBorder(new TitledBorder(new LineBorder(new Color(174,193,132), 5), "Login"));
+		borderPanel.setBackground(new Color(249, 248, 240));
+		borderPanel.setBorder(new TitledBorder(new LineBorder(new Color(174, 193, 132), 5), "Login"));
 		add(borderPanel);
 
 		// IP 컴포넌트
@@ -131,6 +141,15 @@ public class IndexPanel extends JPanel {
 		connectBtn.setBounds(30, 340, 120, 20);
 		borderPanel.add(connectBtn);
 
+		// 서버 메세지 컴포넌트
+		adminPanel.add(adminMsg);
+		adminPanel.setBorder(new TitledBorder(new LineBorder(new Color(174, 193, 132), 5), "전체공지"));
+		adminPanel.setBounds(40, 225, 305, 63);
+		adminPanel.setBackground(new Color(249,248,240));
+		adminMsg.setEnabled(false);
+		adminMsg.setDisabledTextColor(Color.BLUE);
+		add(adminPanel);
+
 		// 테스트 코드
 		inputIp.setText("127.0.0.1");
 		inputPort.setText("10000");
@@ -139,8 +158,8 @@ public class IndexPanel extends JPanel {
 	private void initListener() {
 		connectBtn.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				// 중복 접속 안되게 
+			public void mousePressed(MouseEvent e) {
+				// 중복 접속 안되게
 				if (connectBtn.isEnabled() == true) {
 					clickConnectBtn();
 				}
